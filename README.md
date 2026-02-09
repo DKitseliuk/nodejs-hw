@@ -1,27 +1,36 @@
 # Express Notes API
 
-## First homework from the Node.js block
+## Second homework from the Node.js block
 
-This project is a simple Express application for working with a notes collection.
-It demonstrates how a minimal web server is structured, how HTTP requests are handled, and how middleware and routing work in Express.
+This project extends the Express Notes API by connecting a real MongoDB database using Mongoose.
+The main goal is not only to implement full CRUD functionality, but also to properly structure the application by separating responsibilities into controllers, routes, models, and middleware.
 
 ---
 
 ## Requirements
 
 - Repository name: `nodejs-hw`
-- Task completed in the `01-express` branch
-- Environment variable `PORT` is used via **dotenv**
-- **cors** middleware is enabled
-- **express.json()** middleware is configured
-- **pino-http** logger is configured
+- Task completed in the `02-mongodb` branch
+- Server successfully connects to MongoDB
+- Environment variable `PORT` and `MONGO_URL` is used via **dotenv**
+- Middleware logger is configured with **pino-http**
+- Middleware **express.json()** is configured
+- Middleware **cors** is enabled
 - Middleware for **404 Not Found** is implemented
 - Middleware for **500 Internal Server Error** is implemented
-- Implemented routes:
+- Implemented CRUD operations:
   - `GET /notes`
   - `GET /notes/:noteId`
-  - `GET /test-error`
-- Project structure follows the requirements
+  - `POST /notes`
+  - `PATCH /notes/:noteId`
+  - `DELETE /notes/:noteId`
+- Project structure follows the requirements:
+  - `src/controllers`
+  - `src/db`
+  - `src/middleware`
+  - `src/models`
+  - `src/routes`
+  - `server.js`
 - Application runs without errors
 - Project is deployed on **render.com**
 
@@ -31,6 +40,9 @@ It demonstrates how a minimal web server is structured, how HTTP requests are ha
 
 - Node.js
 - Express
+- MongoDB
+- Mongoose
 - dotenv
 - cors
 - pino-http
+- http-errors
