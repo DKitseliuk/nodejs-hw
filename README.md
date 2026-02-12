@@ -2,29 +2,30 @@
 
 ## Second homework from the Node.js block
 
-This project extends the Express Notes API by connecting a real MongoDB database using Mongoose.
-The main goal is not only to implement full CRUD functionality, but also to properly structure the application by separating responsibilities into controllers, routes, models, and middleware.
+This project extends the Express Notes API by adding pagination, text search, and full request validation.
+The goal of this task is to improve data querying capabilities and implement proper validation using celebrate.
 
 ---
 
 ## Requirements
 
 - Repository name: `nodejs-hw`
-- Task completed in the `02-mongodb` branch
+- Task completed in the `03-validation` branch
 - Server successfully connects to MongoDB
 - Environment variable `PORT` and `MONGO_URL` is used via **dotenv**
 - Middleware logger is configured with **pino-http**
 - Middleware **express.json()** is configured
 - Middleware **cors** is enabled
 - Middleware for **404 Not Found** is implemented
+- Middleware for **celebrate errors** is implemented
 - Middleware for **500 Internal Server Error** is implemented
-- Implemented CRUD operations:
-  - `GET /notes`
-  - `GET /notes/:noteId`
-  - `POST /notes`
-  - `PATCH /notes/:noteId`
-  - `DELETE /notes/:noteId`
+- Full CRUD functionality for notes is implemented
+- Pagination is implemented for `GET /notes`
+- Filtering by `tag` and text search (`search`) is implemented using MongoDB text index
+- Request validation is implemented using **celebrate**
+- Validation schemas are created in `src/validations/notesValidation.js`
 - Project structure follows the requirements:
+  - `src/constants`
   - `src/controllers`
   - `src/db`
   - `src/middleware`
@@ -36,12 +37,51 @@ The main goal is not only to implement full CRUD functionality, but also to prop
 
 ---
 
+## Implemented Features
+
+### Filtering
+
+`GET /notes` supports query parameters:
+
+- `tag` — one of the predefined tags
+- `search` — text search across `title` and `content` fields (MongoDB text index)
+
+### Pagination
+
+`GET /notes` supports pagination via query parameters:
+
+- `page` (default: 1, minimum: 1)
+- `perPage` (default: 10, range: 5–20)
+
+---
+
+### Validation
+
+Request validation is implemented using **celebrate**.
+
+Validation schemas:
+
+- `getAllNotesSchema`
+- `noteIdSchema`
+- `createNoteSchema`
+- `updateNoteSchema`
+
+Validation includes:
+
+- Query parameters validation
+- Route parameter validation (`noteId` using `isValidObjectId`)
+- Request body validation
+- Ensuring a non-empty payload for PATCH requests
+
+---
+
 ## Technologies
 
 - Node.js
 - Express
 - MongoDB
 - Mongoose
+- celebrate
 - dotenv
 - cors
 - pino-http
