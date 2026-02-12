@@ -7,7 +7,7 @@ import {
   getAllNotesSchema,
   noteIdSchema,
   updateNoteSchema,
-} from '../validations/noteValidation.js';
+} from '../validations/notesValidation.js';
 import {
   createNote,
   deleteNote,
