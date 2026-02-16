@@ -1,4 +1,4 @@
-//  src\db\connectMongoDB.js
+//  src/db/connectMongoDB.js
 
 import mongoose from 'mongoose';
 import { Note } from '../models/note.js';

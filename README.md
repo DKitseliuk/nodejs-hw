@@ -1,37 +1,42 @@
 # Express Notes API
 
-## Second homework from the Node.js block
+## Fourth homework from the Node.js block
 
-This project extends the Express Notes API by adding pagination, text search, and full request validation.
-The goal of this task is to improve data querying capabilities and implement proper validation using celebrate.
+This project extends the Express Notes API by adding user authentication, sessions, cookies, and private note collections.
+Users can register, log in, log out, and manage their personal notes, ensuring that notes are private and accessible only to the owner.
 
 ---
 
 ## Requirements
 
 - Repository name: `nodejs-hw`
-- Task completed in the `03-validation` branch
+- Task completed in the `04-auth` branch
 - Server successfully connects to MongoDB
-- Environment variable `PORT` and `MONGO_URL` is used via **dotenv**
-- Middleware logger is configured with **pino-http**
+- Environment variables `PORT` and `MONGO_URL` are used via **dotenv**
+- Middleware logger configured with **pino-http**
 - Middleware **express.json()** is configured
 - Middleware **cors** is enabled
 - Middleware for **404 Not Found** is implemented
-- Middleware for **celebrate errors** is implemented
-- Middleware for **500 Internal Server Error** is implemented
-- Full CRUD functionality for notes is implemented
-- Pagination is implemented for `GET /notes`
-- Filtering by `tag` and text search (`search`) is implemented using MongoDB text index
-- Request validation is implemented using **celebrate**
-- Validation schemas are created in `src/validations/notesValidation.js`
-- Project structure follows the requirements:
-  - `src/constants`
+- Middleware for **500 Internal Server Error** (or `http-errors`) is implemented
+- Full CRUD functionality for notes with user-specific access
+- User authentication implemented:
+  - Registration (`POST /auth/register`)
+  - Login (`POST /auth/login`)
+  - Logout (`POST /auth/logout`)
+  - Session refresh (`POST /auth/refresh`)
+- Sessions stored in MongoDB and cookies (`accessToken`, `refreshToken`, `sessionId`) are set securely
+- Authentication middleware protects all note routes
+- Passwords are hashed with **bcrypt**
+- Validation implemented using **celebrate** and **Joi**
+- Project structure follows requirements:
   - `src/controllers`
   - `src/db`
   - `src/middleware`
   - `src/models`
   - `src/routes`
-  - `server.js`
+  - `src/services`
+  - `src/validations`
+  - `src/constants`
 - Application runs without errors
 - Project is deployed on **render.com**
 
@@ -39,39 +44,52 @@ The goal of this task is to improve data querying capabilities and implement pro
 
 ## Implemented Features
 
-### Filtering
+### User Authentication
 
-`GET /notes` supports query parameters:
+- **Registration** (`POST /auth/register`)
+  - Validates email and password
+  - Checks for existing email
+  - Hashes password
+  - Creates new user and session
+  - Sets secure cookies
 
-- `tag` — one of the predefined tags
-- `search` — text search across `title` and `content` fields (MongoDB text index)
+- **Login** (`POST /auth/login`)
+  - Validates email and password
+  - Checks credentials
+  - Replaces old session with new one
+  - Sets secure cookies
 
-### Pagination
+- **Logout** (`POST /auth/logout`)
+  - Deletes current session
+  - Clears cookies
+  - Returns status 204
 
-`GET /notes` supports pagination via query parameters:
-
-- `page` (default: 1, minimum: 1)
-- `perPage` (default: 10, range: 5–20)
+- **Session refresh** (`POST /auth/refresh`)
+  - Validates `sessionId` and `refreshToken` from cookies
+  - Creates new session if valid
+  - Sets new secure cookies
+  - Returns message `Session refreshed`
 
 ---
 
-### Validation
+### Notes Access
 
-Request validation is implemented using **celebrate**.
+- All note routes are protected with **authenticate** middleware
+- Each note has a `userId` field linking it to its owner
+- CRUD operations only affect notes belonging to the authenticated user
+- Operations return **404** if the note does not exist or belongs to another user
 
-Validation schemas:
+---
 
-- `getAllNotesSchema`
-- `noteIdSchema`
-- `createNoteSchema`
-- `updateNoteSchema`
+### Sessions & Cookies
 
-Validation includes:
-
-- Query parameters validation
-- Route parameter validation (`noteId` using `isValidObjectId`)
-- Request body validation
-- Ensuring a non-empty payload for PATCH requests
+- Sessions stored in MongoDB (`Session` model)
+- Access token valid for 15 minutes, refresh token and sessionId valid for 1 day
+- Cookies settings:
+  - `httpOnly: true`
+  - `secure: true`
+  - `sameSite: 'none'`
+  - `maxAge` per token type
 
 ---
 
@@ -81,7 +99,8 @@ Validation includes:
 - Express
 - MongoDB
 - Mongoose
-- celebrate
+- bcrypt
+- celebrate / Joi
 - dotenv
 - cors
 - pino-http

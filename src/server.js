@@ -1,13 +1,15 @@
-// src\server.js
+// src/server.js
 
 //Imports
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { errors } from 'celebrate';
 import { logger } from './middleware/logger.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import authRoutes from './routes/authRoutes.js';
 import notesRouters from './routes/notesRoutes.js';
 import { connectMongoDB } from './db/connectMongoDB.js';
 
@@ -22,6 +24,12 @@ app.use(express.json());
 
 //Middleware - CORS
 app.use(cors());
+
+//Middleware - Cookies parser
+app.use(cookieParser());
+
+//Routes - auth
+app.use(authRoutes);
 
 //Routes - Notes
 app.use(notesRouters);

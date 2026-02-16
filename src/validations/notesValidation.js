@@ -1,4 +1,4 @@
-// src\validations\noteValidation.js
+// src/validations/noteValidation.js
 
 import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';

@@ -1,7 +1,8 @@
-//  src\routes\notesRoutes.js
+//  src/routes/notesRoutes.js
 
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
+import { authenticate } from '../middleware/authenticate.js';
 import {
   createNoteSchema,
   getAllNotesSchema,
@@ -17,6 +18,8 @@ import {
 } from '../controllers/notesController.js';
 
 const router = Router();
+
+router.use('/notes', authenticate);
 
 router.get('/notes', celebrate(getAllNotesSchema), getAllNotes);
 router.post('/notes', celebrate(createNoteSchema), createNote);
