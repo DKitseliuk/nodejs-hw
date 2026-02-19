@@ -11,6 +11,9 @@ cloudinary.config({
 });
 
 const saveFileToCloudinary = async (buffer, userId) => {
+  if (!userId) {
+    throw new Error('userId is required to upload avatar');
+  }
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
