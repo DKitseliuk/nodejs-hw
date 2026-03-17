@@ -60,7 +60,7 @@ const updateNote = async (req, res) => {
     },
     req.body,
     {
-      new: true,
+      returnDocument: 'after',
     },
   );
 
